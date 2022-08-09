@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blockchain Client</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blockchain Client</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Wallet Generator
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'maketransactions' %}">Make Transaction</a>
+              <span class="sr-only">(current)</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'viewtransactions' %}">View Transactions</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <form id="transaction_form" method="post" action="/generatetransactions/">
+      {% csrf_token %} 
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card-body">
+            <h4 class="card-title">Send Coins</h4>
+            <p class="card-text">Enter transaction details and click on "Generate Transaction" button to generate your transaction</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+
+    <div class="container alert alert-secondary">
+    
+        <div class="row">
+          <label class="col-sm-2">Sender Address:</label>
+          <div class="col-sm-10">
+            <input type="text" name="sender_address" id="sender_address" rows="2"  class="form-control" value={{public}}>
+
+          </div>
+        </div>
+
+        <br>
+        
+        <!-- <div class="row">
+          <label class="col-sm-2">Sender Private Key:</label>
+          <div class="col-sm-10">
+            <input type="text" name="sender_private_key" id="sender_private_key" rows="2" class="form-control" value={{private}}>
+          </div>
+        </div> -->
+
+        
+        
+        <div class="row">
+          <label class="col-sm-2">Recipient Address:</label>
+          <div class="col-sm-10">
+            <input type="text" name="recipient_address" id="recipient_address" rows="2" class="form-control" value={{private}}>
+          </div>
+        </div>
+
+        <br>
+        
+        <div class="row">
+          <label class="col-sm-2">Amount to Send:</label>
+          <div class="col-sm-10">
+            <input type="text" name="amount" id="amount" rows="2" class="form-control" value="{{amount}}">
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <label class="col-sm-2">currency1:</label>
+          <div class="col-sm-10">
+            <input type="text" name="currency1" id="currency1" rows="2" class="form-control" value={{currency1}}>
+          </div>
+        </div>
+        <br>
+
+        <div class="row">
+          <label class="col-sm-2">currency2:</label>
+          <div class="col-sm-10">
+            <input type="text" name="currency2" id="currency2" rows="2" class="form-control" value={{currency2}}>
+          </div>
+        </div>
+        <br>
+
+        <div class="row">
+          <label class="col-sm-2">amount1:</label>
+          <div class="col-sm-10">
+            <input type="text" name="currency2" id="amount1" rows="2" class="form-control" value={{amount1}}>
+          </div>
+        </div>
+        <br>
+
+        
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <input type="button" id="generate_transaction"  class="btn btn-primary btn-lg" value="Generate Transaction">
+          </div>
+        </div>
+
+        <br>
+
+   
+    </div>
+  </form>
+
+    <!-- Modal -->
+   
+    <div class="modal modal-alert fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <div class="modal-title col-md-10">Confirm transaction details, enter a blockchain node url and click on "Confirm Transaction" to finalize your transaction.</div>
+            <button type="button" class="close col-md-2" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+
+          <div class="modal-body">
+
+            <form id="confirmation_transaction_form">
+              {% csrf_token %}
+                <div class="row">
+                  <label class="col-sm-12">Sender Address:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="sender_address" id="confirmation_sender_address" rows="2" class="form-control" value={{public}}>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">Recipient Address:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="recipient_address" id="confirmation_recipient_address" rows="2" class="form-control" value={{private}}>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <label class="col-sm-12">Amount to Send:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="amount" id="confirmation_amount" rows="2" class="form-control" value={{amount}}>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">currency1:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="currency1" id="confirmation_currency1" rows="2" class="form-control" value={{currency1}}>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">currency2:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="currency2" id="confirmation_currency2" rows="2" class="form-control" value={{currency2}}>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">amount1:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="amount1" id="confirmation_amount1" rows="2" class="form-control" value={{amount1}}>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">Transaction Signature:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="signature" id="transaction_signature" rows="2" class="form-control">
+                  </div>
+                </div>
+
+              </form>
+
+
+            <div class="row">
+              <label class="col-sm-12">Blockchain Node URL:</label>
+              <div class="col-sm-12">
+                <input type="text" name="node_url" id="node_url" rows="2" class="form-control" value="http://127.0.0.1:8000">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button type="button" id="button_confirm_transaction" class="btn btn-success">Confirm Transaction</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Alert Message for successful transaction -->
+    <div class="modal modal-alert fade" id="success_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <div class="alert alert-success" role="alert">
+              <h4 class="alert-heading">Successful Transaction!</h4>
+              <p>You successfully completed your transaction. It will be added to the next block.</p>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="button_confirm_transaction" class="btn btn-success" data-dismiss="modal">OK</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+            csrfmiddlewaretoken = $("#transaction_form").find("input[name='csrfmiddlewaretoken']" ).val();
+            console.log(csrfmiddlewaretoken);
+            
+      $(function () {
+          $("#generate_transaction").click(function () {
+            console.log(1);
+            var sender_address = $('#sender_address').val();
+            console.log(sender_address);
+            var recipient_address = $('#recipient_address').val();
+            // sender_private_key=document.getElementById("sender_private_key");
+            console.log(recipient_address)
+            var amount=$('#amount').val();
+            var currency1=$('#currency1').val();
+            var currency2= $('#currency2').val()
+            var amount1= $('#amount1').val();
+            // formData=$('#transaction_form').serializeArray();
+            // formData = JSON.stringify(formData);
+            $.ajax({
+              type :  "GET",
+              url : '/generatetransactions/',
+              dataType :'json',
+              data : {
+                // "csrfmiddlewaretoken" : csrfmiddlewaretoken,
+                "sender_address" : sender_address,
+                // "sender_private_key" : sender_private_key.value,
+                "recipient_address" : recipient_address,
+                "amount" : amount,
+                "currency1": currency1,
+                "currency2" : currency2,
+                "amount1" : amount1
+                },
+                         
+         
+              success: function(response){
+                console.log(response)
+                                 
+                confirmation_sender_address = document.getElementById("confirmation_sender_address").value 
+                confirmation_recipient_address = document.getElementById("confirmation_recipient_address").value 
+                confirmation_amount=document.getElementById("confirmation_amount").value 
+                confirmation_currency1=document.getElementById("confirmation_currency1").value
+                confirmation_currency2=document.getElementById("confirmation_currency2").value
+                confirmation_amount1=document.getElementById("confirmation_amount1").value
+                document.getElementById("transaction_signature").value = "EDB98BC6F381B57CBCBC18A91E6BC4E56855FD5203E833DEEDE1E974AB3164189562EC03EF56";
+                $("#basicModal").modal('show');
+               
+              
+                },
+              
+              error: function(error){
+                console.log(error);
+                console.log(csrfmiddlewaretoken);
+                
+              }
+            });
+
+          });
+      });
+
+      csrfmiddlewaretoken = $("#confirmation_transaction_form").find("input[name='csrfmiddlewaretoken']" ).val();
+      console.log(csrfmiddlewaretoken);
+      $(function () {
+          $("#button_confirm_transaction").click(function () {
+            //console.log($('#confirmation_transaction_form').serialize());
+            var confirmation_sender_address = $('#confirmation_sender_address').val();
+            console.log(confirmation_sender_address);
+            var confirmation_recipient_address = $('#confirmation_recipient_address').val();
+            // sender_private_key=document.getElementById("sender_private_key");
+            console.log(confirmation_recipient_address)
+            var confirmation_amount=$('#confirmation_amount').val();
+            var confirmation_currency1=$('#confirmation_currency1').val();
+            var confirmation_currency2= $('#confirmation_currency2').val()
+            var confirmation_amount1= $('#confirmation_amount1').val();
+            
+            $.ajax({
+              type: "POST",
+              url: document.getElementById("node_url").value + "/transactions/new/",
+              headers: {'Access-Control-Allow-Origin':'*'},
+              dataType : 'json',
+              data : {
+                "csrfmiddlewaretoken" : csrfmiddlewaretoken,
+                "confirmation_sender_address" : confirmation_sender_address,
+                "confirmation_recipient_address" : confirmation_recipient_address,
+                "confirmation_amount" : confirmation_amount,
+                "confirmation_currency1":confirmation_currency1,
+                "confirmation_currency2":confirmation_currency2,
+                "confirmation_amount1":confirmation_amount1,
+                },
+              success: function(response){
+
+                //reset both forms
+                $("#transaction_form")[0].reset();
+                $("#confirmation_transaction_form")[0].reset();
+                
+                //clean text boxes
+                $("#sender_address").val("");
+                $("#sender_private_key").val("");
+                $("#recipient_address").val("");
+                $("#amount").val("");
+                $("#currency1").val("");
+                $("#currency2").val("");
+                $("#amount1").val("");
+
+                $("#basicModal").modal('hide');
+                $("#success_transaction_modal").modal('show');
+                
+              },
+              error: function(error){
+                console.log(error);
+              }
+            });
+
+          });
+      });
+
+    </script>
+
+
+  </body>
+
+</html>
