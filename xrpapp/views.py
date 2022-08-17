@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.shortcuts import render
 import requests
 import datetime
 import hashlib
+from decimal import Decimal
 import json
 from uuid import uuid4
 import socket
@@ -22,13 +22,13 @@ from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from xrpl.clients import JsonRpcClient
 from xrpl.core import keypairs
-from xrpl.wallet import generate_faucet_wallet
+from xrpl.wallet import generate_faucet_wallet, Wallet
 import requests
 from django.http import JsonResponse
 from django.conf import settings
 
 url = settings.BASE_URL
-key = 'xIFWrKdeKl9JIEYCpZbv49awFRO2lMGj'
+key = 'vj54zTtJiZiTDPaUFB1yi9qMrUNGIF0Y'
 class Blockchain:
 
     def __init__(self):
@@ -265,7 +265,15 @@ def index(request):
         print(data)
         rate = data['info']['quote']
         amount1 = data['result']
-
+        wallet_info = {}
+        wallet = Wallet.create()
+        seed = wallet.seed
+        public, private = keypairs.derive_keypair(seed)
+        #wallet_info["name"] = name
+        wallet_info["classic_address"] = wallet.classic_address
+        wallet_info["private_key"] = private
+        wallet_info["public_key"] = public
+        wallet_info["seed"] = seed
         seed = keypairs.generate_seed()
         public,private = keypairs.derive_keypair(seed)
         test_account = keypairs.derive_classic_address(public)
@@ -277,6 +285,8 @@ def index(request):
                 'currency1':currency1,
                 'currency2':currency2,
                 'amount1':amount1}
+        print('name',name)        
+        print('classic_address',wallet.classic_address)
         print('public',public)  
         print('private',private)   
         print('seed',seed)    
@@ -308,7 +318,15 @@ def newwallet(request):
         print(data)
         rate = data['info']['quote']
         amount1 = data['result']
-
+        wallet_info = {}
+        wallet = Wallet.create()
+        seed = wallet.seed
+        public, private = keypairs.derive_keypair(seed)
+        wallet_info["name"] = name
+        wallet_info["classic_address"] = wallet.classic_address
+        wallet_info["private_key"] = private
+        wallet_info["public_key"] = public
+        wallet_info["seed"] = seed
         seed = keypairs.generate_seed()
         public,private = keypairs.derive_keypair(seed)
         test_account = keypairs.derive_classic_address(public)
@@ -320,6 +338,8 @@ def newwallet(request):
                 'currency1':currency1,
                 'currency2':currency2,
                 'amoun1':amount1}
+        print('name',name)
+        print('classic_address',wallet.classic_address)
         print('public',public)  
         print('private',private)   
         print('seed',seed)    
@@ -348,11 +368,11 @@ def generatetransactions(request):
     print(transaction)
     # response = {'transaction': transaction.to_dict(), 'signature': sender_address }
     response={'sender_address':sender_address,
-                    'recipient_address':recipient_address,
-                    'amount':amount,
-                    'currency1':currency1,
-                    'currency2':currency2,
-                    'amount1':amount1}
+               'recipient_address':recipient_address,
+               'amount':amount,
+               'currency1':currency1,
+               'currency2':currency2,
+               'amount1':amount1}
     print("a",response)
     return JsonResponse(response)
         
@@ -361,7 +381,6 @@ def generatetransactions(request):
    
 def newtransaction(request):
     if request.method=="POST":
-        
         confirmation_sender_address = request.POST.get('confirmation_sender_address')
         confirmation_recipient_address = request.POST.get('confirmation_recipient_address')
         confirmation_amount = request.POST.get('confirmation_amount')
@@ -392,7 +411,7 @@ def getransactions(request):
 def fullchain(request):
     response = {
         'chain': blockchain.chain,
-        'transactions': blockchain.transactions,
+        #'transactions': blockchain.transactions,
         'length': len(blockchain.chain),
      }
     print(response)
@@ -414,4 +433,5 @@ def mine(request):
                     'previous_hash': block['previous_hash'],
                     'transactions': block['transactions']}
         return JsonResponse(res)   
+
 

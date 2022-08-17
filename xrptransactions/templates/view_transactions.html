@@ -52,7 +52,7 @@
         <div class="col-lg-12">
 
           <div class="card-body">
-            <h4 class="card-title">View Transactions</h4>
+            <h4 class="card-title"> Transactions</h4>
             <p class="card-text">Enter a blockchain node URL and click on "View Transactions" button to check all transactions</p>
           </div>
 
@@ -73,7 +73,8 @@
 
         <div class="row">
           <div class="col-lg-12 text-center">
-            <input type="button" id="view_transactions" class="btn btn-primary btn-lg" value="View Transactions">
+            <input type="button" id="get_transactions" class="btn btn-primary btn-lg" value="view Transactions">
+                   
           </div>
         </div>
 
@@ -86,6 +87,28 @@
       </table>
     </div>
 
+    <!-- <div class="row">
+      <div class="col-lg-12 text-center">
+        <input type="button" id="view_transactions" class="btn btn-primary btn-lg" value="View Transactions">
+      </div>
+    </div>
+
+    <div class="container">
+      <table id="transactions_table1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <input type="button" id="mine_block" class="btn btn-primary btn-lg" value="transaction enabled">
+      </div>
+    </div>
+
+    <div class="container">
+      <table id="transactions_table2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+      </table>
+    </div> -->
+
 
     <!-- Bootstrap core JavaScript -->
     <script src="/static/vendor/jquery/jquery.min.js"></script>
@@ -93,33 +116,31 @@
     <script type="text/javascript" src="/static/vendor/DataTables/js/datatables.min.js"></script>
     <script src="/static/vendor/DataTables/js/ellipsis.js"></script>
 
-
     <script>
 
       $(function(){
 
         
-        $('#view_transactions').click(function(){
+        $('#get_transactions').click(function(){
 
           $.ajax({
-            url: document.getElementById("node_url").value + "/mine",
+            url: document.getElementById("node_url").value + '/transactions/get/',
             type: 'GET',
             success: function(response){
 
               console.log(response);  
-              console.log(response.message[0].sender_address)
-             
+                        
       
               //Generate Transactions Table
               var transactions = [];
                var count = 1;
                console.log(count)
+               console.log(response)
                console.log(response.transactions.length)
                
-              for (var i = 0; i < response.transactions.length ; i++) { 
+               for (var i = 0; i < response.transactions.length ; i++) { 
                 
-                // for (j = 0; j < response.message.length; j++) {
-
+                
                   //format date 
                   // var options = {  year: "numeric", month: "short",  day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"  };
                   // var date = new Date(response["chain"][i]["timestamp"] * 1000);
@@ -136,12 +157,10 @@
                                 // formattedDateTime,
                                  ];
                   transactions.push(transaction);
-
                   count += 1;
-                };
-            
-
-              // Restrict a column to 10 characters, do split words
+               }; 
+                  
+                
                 $('#transactions_table').dataTable( {
                   data: transactions,
                   columns: [{ title: "#" },
@@ -152,11 +171,89 @@
                             { title: "currency2"},
                             { title: "amount1"},                        
                             // { title: "Timestamp"},
-                             { title: "Block"}],
+                             ],
+                  columnDefs: [ {targets: [1,2,3,4,5], render: $.fn.dataTable.render.ellipsis( 25 )}]
+                } ); 
+              },
+
+              
+error: function(error){
+  console.log(error);
+}
+});
+});
+
+
+})
+   
+</script>
+
+    <!-- <script>
+
+      $(function(){
+
+        
+        $('#view_transactions').click(function(){
+
+          $.ajax({
+            url: document.getElementById("node_url").value + "/chain",
+            type: 'GET',
+            success: function(response){
+
+              console.log(response);  
+                        
+      
+              //Generate Transactions Table
+              var transactions = [];
+               var count = 1;
+               console.log(count)
+               console.log(response.chain.length)
+               
+               
+               
+              for (var i = 0; i < response.chain.length ; i++) { 
+                for (j = 0; j < response.chain[i].transactions.length; j++){
+                
+                
+                  //format date 
+                  // var options = {  year: "numeric", month: "short",  day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"  };
+                  // var date = new Date(response["chain"][i]["timestamp"] * 1000);
+                  // var formattedDateTime = date.toLocaleTimeString("en-us", options);
+
+                  transaction = [count,
+                                response.chain[i].transactions[j].recipient_address,
+                                response.chain[i].transactions[j].sender_address,
+                                response.chain[i].transactions[j].amount,
+                                response.chain[i].transactions[j].currency1,
+                                response.chain[i].transactions[j].currency2,
+                                response.chain[i].transactions[j].amount1,
+                           
+                                // formattedDateTime,
+                                 ];
+                  transactions.push(transaction);
+
+                  count += 1;
+                };
+            };
+            
+
+              // Restrict a column to 10 characters, do split words
+                $('#transactions_table1').dataTable( {
+                  data: transactions,
+                  columns: [{ title: "#" },
+                            { title: "Recipient Address"},
+                            { title: "Sender Address"},
+                            { title: "amount"},
+                            { title: "currency1"},
+                            { title: "currency2"},
+                            { title: "amount1"},                        
+                            // { title: "Timestamp"},
+                             ],
                   columnDefs: [ {targets: [1,2,3,4,5], render: $.fn.dataTable.render.ellipsis( 25 )}]
                 } );
+              },
 
-            },
+              
             error: function(error){
               console.log(error);
             }
@@ -172,10 +269,90 @@
     </script>
 
 
+  
+  <br>
 
 
 
+   Bootstrap core JavaScript 
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="/static/vendor/DataTables/js/datatables.min.js"></script>
+  <script src="/static/vendor/DataTables/js/ellipsis.js"></script>
 
-  </body>
+
+  <script>
+
+    $(function(){
+
+      
+      $('#mine_block').click(function(){
+
+        $.ajax({
+          url: document.getElementById("node_url").value + "/mine",
+          type: 'GET',
+          success: function(response){
+
+            console.log(response);  
+              
+            //Generate Transactions Table
+            var transactions = [];
+             var count = 1;
+             console.log(count)
+             console.log(response.transactions.length)
+             
+             
+            for (var i = 0; i < response.transactions.length ; i++) { 
+              
+              // for (j = 0; j < response.message.length; j++) {
+
+                //format date 
+                // var options = {  year: "numeric", month: "short",  day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"  };
+                // var date = new Date(response["chain"][i]["timestamp"] * 1000);
+                // var formattedDateTime = date.toLocaleTimeString("en-us", options);
+
+                transaction = [count,
+                              response.transactions[i].recipient_address,
+                              response.transactions[i].sender_address,
+                              response.transactions[i].amount,
+                              response.transactions[i].currency1,
+                              response.transactions[i].currency2,
+                              response.transactions[i].amount1,
+                         
+                              // formattedDateTime,
+                               ];
+                transactions.push(transaction);
+
+                count += 1;
+              };
+          
+
+            // Restrict a column to 10 characters, do split words
+              $('#transactions_table2').dataTable( {
+                data: transactions,
+                columns: [{ title: "#" },
+                          { title: "Recipient Address"},
+                          { title: "Sender Address"},
+                          { title: "amount"},
+                          { title: "currency1"},
+                          { title: "currency2"},
+                          { title: "amount1"},                        
+                          // { title: "Timestamp"},
+                           ],
+                columnDefs: [ {targets: [1,2,3,4,5], render: $.fn.dataTable.render.ellipsis( 25 )}]
+              } );
+
+          },
+          error: function(error){
+            console.log(error);
+          }
+        });
+      });
+
+
+    })
+
+ </script> -->
+</body>
 
 </html>
