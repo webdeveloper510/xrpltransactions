@@ -41,8 +41,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'escrow' %}">escrow</a>
-            </li>
+                <a class="nav-link" href="{% url 'escrow' %}">escrow</a>
+              </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'escrowtransaction' %}">escrowtransactions</a>
             </li>
@@ -130,7 +130,7 @@
         $('#get_transactions').click(function(){
 
           $.ajax({
-            url: document.getElementById("node_url").value + '/transactions/get/',
+            url: document.getElementById("node_url").value + '/escrow/',
             type: 'GET',
             success: function(response){
 
@@ -142,9 +142,9 @@
                var count = 1;
                console.log(count)
                console.log(response)
-               console.log(response.transactions.length)
+               console.log(response.length)
                
-               for (var i = 0; i < response.transactions.length ; i++) { 
+               for (var i = 0; i < response.length ; i++) { 
                 
                 
                   //format date 
@@ -153,14 +153,13 @@
                   // var formattedDateTime = date.toLocaleTimeString("en-us", options);
 
                   transaction = [count,
-                                response.transactions[i].recipient_address,
-                                response.transactions[i].sender_address,
-                                response.transactions[i].amount,
-                                response.transactions[i].currency1,
-                                response.transactions[i].currency2,
-                                response.transactions[i].amount1,
-                                '0.1',
-                                response.transactions[i].transamount
+                                response.recipient_address,
+                                response.sender_address,
+                                response.sender_seed,
+                                response.amount,
+                                response.claimdate,
+                                response.expiredate
+                                
                            
                                 // formattedDateTime,
                                  ];
@@ -175,17 +174,13 @@
                             { title: "Recipient Address"},
                             { title: "Sender Address"},
                             { title: "amount"},
-                            { title: "currency1"},
-                            { title: "currency2"},
-                            { title: "amount1"}, 
-                            { title:  "fee"},
-                            { title:  "amountwithfee"}                       
-                            // { title: "Timestamp"},
-                             ],
+                            { title: "claimdate"},
+                            { title: "expirydate"},
+                            ],
                   columnDefs: [ {targets: [1,2,3,4,5], render: $.fn.dataTable.render.ellipsis( 25 )}]
                 } ); 
               },
-
+c
               
 error: function(error){
   console.log(error);
