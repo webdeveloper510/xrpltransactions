@@ -4,6 +4,7 @@ A  XRPL SDK for python django devs, to focus on developing real world applicatio
 xrpltransactions is a light weight python SDK for developing website  with the XRP Ledger.
 
 It was built to focus on the important stuff and do them simply and precisely like creating and managing an account, creation and management of xrpl assets and objects.
+It aims to make transactions instantly, and storing the recepts as an NFT.
 
 it currently supports:
 
