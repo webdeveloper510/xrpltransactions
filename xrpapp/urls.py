@@ -24,11 +24,16 @@ urlpatterns = [
     path('newwallet/',views.newwallet,name='newwallet'),
     path('maketransactions/',views.maketransactions,name='maketransactions'),
     path('chain/',views.fullchain,name='fullchain'),
+     path('escrow/',views.escrow,name='escrow'),
+    path('escrowtransaction/',views.escrowtransaction,name='escrowtransaction'),
     path('viewtransactions/',views.viewtransactions,name='viewtransactions'),
     path('transactions/new/',views.newtransaction,name='newtransaction'),
     path('transactions/get/', views.getransactions,name='getransactions' ),
     path('generatetransactions/',views.generatetransactions,name='generatetransactions'),
     path('mine/',views.mine,name='mine'),
+    path('senderaddress/',views.senderaddress,name='senderaddress'),
+    path('sendxrp/',views.sendxrp,name='sendxrp'),
+
 ]
 
 

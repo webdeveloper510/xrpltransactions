@@ -38,6 +38,12 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'viewtransactions' %}">View Transactions</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'escrow' %}">escrow</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'escrowtransaction' %}">escrowtransactions</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -124,6 +130,29 @@
         </div>
         <br>
 
+        <div class="row">
+          <label class="col-sm-2">fee:</label>
+          <div class="col-sm-10">
+            <input id="dropofxrp" name="dropofxrp" class="form-control" value="{{dropstoxrp}}">
+          </div>
+        </div>
+
+        <br>
+        <div class="row">
+          <label class="col-sm-2">amount with fee:</label>
+          <div class="col-sm-10">
+            <input id="transamount" name="amountwithfee" class="form-control" value="{{transamount}}">
+          </div>
+        </div>
+        <!-- <br>
+        <div class="row">
+          <label class="col-sm-2">transaction signature:</label>
+          <div class="col-sm-10">
+            <input id="signature" name="signature" class="form-control" value="{{signature}}">
+          </div>
+        </div> -->
+        <br>
+
         
         <div class="row">
           <div class="col-lg-12 text-center">
@@ -197,9 +226,23 @@
                 </div>
 
                 <div class="row">
+                  <label class="col-sm-12">fee:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="dropstoxrp" id="confirmation_dropstoxrp" rows="2" class="form-control" value={{dropstoxrp}}>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <label class="col-sm-12">amount with fee:</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="transamount" id="confirmation_transamount" rows="2" class="form-control" value={{transamount}}>
+                  </div>
+                </div>
+
+                <div class="row">
                   <label class="col-sm-12">Transaction Signature:</label>
                   <div class="col-sm-12">
-                    <input type="text" name="signature" id="transaction_signature" rows="2" class="form-control">
+                    <input type="text" name="signature" id="confirmation_signature" rows="2" class="form-control" value={{signature}}>
                   </div>
                 </div>
 
@@ -273,6 +316,9 @@
             var currency1=$('#currency1').val();
             var currency2= $('#currency2').val()
             var amount1= $('#amount1').val();
+            var fee= $('#fee').val();
+            var transamount=$('#transamount').val();
+            var signature=$('#signature').val();
             // formData=$('#transaction_form').serializeArray();
             // formData = JSON.stringify(formData);
             $.ajax({
@@ -287,7 +333,9 @@
                 "amount" : amount,
                 "currency1": currency1,
                 "currency2" : currency2,
-                "amount1" : amount1
+                "amount1" : amount1,
+                "transamount":transamount,
+                "signature":signature
                 },
                          
          
@@ -300,9 +348,11 @@
                 confirmation_currency1=document.getElementById("confirmation_currency1").value
                 confirmation_currency2=document.getElementById("confirmation_currency2").value
                 confirmation_amount1=document.getElementById("confirmation_amount1").value
-                document.getElementById("transaction_signature").value = "EDB98BC6F381B57CBCBC18A91E6BC4E56855FD5203E833DEEDE1E974AB3164189562EC03EF56";
+                confirmation_amount1=document.getElementById("confirmation_amount1").value
+                confirmation_transamount=document.getElementById("confirmation_transamount").value
+                confirmation_signature=document.getElementById("confirmation_signature").value  
+                //  document.getElementById("confirmation_signature").value ="C8DF6879631FD9E7B34BEB68F5476CD9A7DB4C305B171F23BF7D2A77E2F807CE";
                 $("#basicModal").modal('show');
-               
               
                 },
               
@@ -330,6 +380,8 @@
             var confirmation_currency1=$('#confirmation_currency1').val();
             var confirmation_currency2= $('#confirmation_currency2').val()
             var confirmation_amount1= $('#confirmation_amount1').val();
+            var confirmation_transamount = $('#confirmation_transamount').val();
+            
             
             $.ajax({
               type: "POST",
@@ -344,6 +396,7 @@
                 "confirmation_currency1":confirmation_currency1,
                 "confirmation_currency2":confirmation_currency2,
                 "confirmation_amount1":confirmation_amount1,
+                "confirmation_transamount": confirmation_transamount,
                 },
               success: function(response){
 
@@ -359,6 +412,9 @@
                 $("#currency1").val("");
                 $("#currency2").val("");
                 $("#amount1").val("");
+                $("#dropofxrp").val("");          
+                $("#transamount").val("");
+                $("#signature").val("");
 
                 $("#basicModal").modal('hide');
                 $("#success_transaction_modal").modal('show');

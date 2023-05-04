@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blockchain Client</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blockchain Client</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Wallet Generator
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'maketransactions' %}">Make Transaction</a>
+              <span class="sr-only">(current)</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'viewtransactions' %}">View Transactions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'escrow' %}">escrow</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'escrowtransaction' %}">escrowtransactions</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <form method="post" action="/escrowtransaction/">
+      {% csrf_token %} 
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card-body">
+            <h4 class="card-title">Escrow</h4>
+            <p class="card-text">Enter transaction details and click on "submit"</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+      <div class="container alert alert-secondary">
+    
+        <div class="row">
+          <label class="col-sm-2"> Date & Time </label>
+          <div class="col-sm-10">
+            <input type="datetime-local" id="datetime" name="expiredate" rows="2"  class="form-control">
+          </div>
+        </div>
+        <br>
+      
+        <div class="row">
+          <label class="col-sm-2">sender Address:</label>
+          <div class="col-sm-10">
+            <input type="text" name="sender_address" id="sender_address" rows="2"  class="form-control">
+
+          </div>
+        </div>
+
+        <br>
+        <div class="row">
+          <label class="col-sm-2">Receiver Address:</label>
+          <div class="col-sm-10">
+            <input type="text" name="receiver_address" id="receiver_address" rows="2"  class="form-control">
+
+          </div>
+        </div>
+
+               
+        <br>
+        
+        <div class="row">
+          <label class="col-sm-2">Amount to Send:</label>
+          <div class="col-sm-10">
+            <input type="text" name="amount" id="amount" rows="2" class="form-control">
+          </div>
+        </div>
+
+        <br>    
+              
+             
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <input type="submit" id="next"  class="btn btn-primary btn-lg" value="next">
+          </div>
+        </div>
+
+        <br>
+
+   
+    </div>
+  </form>
+  </body>
+  </html>
