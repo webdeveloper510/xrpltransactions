@@ -195,8 +195,6 @@ def index(request):
         currency1=request.POST.get('currency1')
         currency2=request.POST.get('currency2')
         res = requests.get(f'{url}/convert?from={currency1}&to={currency2}&amount={amount}&apikey={key}')
-        print("=------------",res)
-       
         status_code = res.status_code
         print(status_code)
         data = res.json()
